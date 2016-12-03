@@ -11,10 +11,19 @@
 #include "Cipher.hpp"
 
 
+/**
+ * \file VigenereCipher.hpp
+ * \brief Contains the declaration of the VigenereCipher class
+ */
+
+/**
+ * \class VigenereCipher
+ * \brief Encrypt or decrypt text using the Vigenere cipher with the given key
+ */
 class VigenereCipher : public Cipher {
   public:
     /**
-     * Create a new PlayfairCipher with the given key
+     * Create a new VigenereCipher with the given key
      *
      * \param key the key to use in the cipher
      */

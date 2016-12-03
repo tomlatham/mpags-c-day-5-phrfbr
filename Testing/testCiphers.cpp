@@ -3,50 +3,36 @@
 
 #include "catch.hpp"
 #include "CipherMode.hpp"
+#include "CipherType.hpp"
 #include "Cipher.hpp"
-#include "CaesarCipher.hpp"
-#include "PlayfairCipher.hpp"
-#include "VigenereCipher.hpp"
+#include "CipherFactory.hpp"
 
 bool testCipher( const Cipher& cipher, const CipherMode cipherMode, const std::string& inputText, const std::string& outputText)
 {
-return cipher.applyCipher (inputText, cipherMode)  == outputText;
+  return cipher.applyCipher (inputText, cipherMode)  == outputText;
 }
 
+TEST_CASE("Cipher encryption/decryption", "[ciphers]") {
+  std::vector<std::unique_ptr<Cipher>> ciphers;
+  ciphers.push_back( cipherFactory(CipherType::Caesar,"10") );
+  ciphers.push_back( cipherFactory(CipherType::Playfair,"hello") );
+  ciphers.push_back( cipherFactory(CipherType::Vigenere,"key") );
 
-TEST_CASE("Caesar Cipher encryption", "[caesar]") {
-  CaesarCipher cc{10};
-  REQUIRE( testCipher( cc, CipherMode::Encrypt, "HELLOWORLD", "ROVVYGYBVN"));
-}
+  std::vector<std::string> plainText;
+  plainText.push_back("HELLOWORLD");
+  plainText.push_back("BOBISXSOMESORTOFIUNIORCOMPLEXQXENOPHONEONEZEROTHINGZ");
+  plainText.push_back("HELLOWORLD");
 
+  std::vector<std::string> cipherText;
+  cipherText.push_back("ROVVYGYBVN");
+  cipherText.push_back("FHIQXLTLKLTLSUFNPQPKETFENIOLVSWLTFIAFTLAKOWATEQOKPPA");
+  cipherText.push_back("RIJVSUYVJN");
 
-TEST_CASE("Playfair Cipher encryption", "[playfair]") {
-  PlayfairCipher cc{"hello"};
-  REQUIRE( testCipher( cc, CipherMode::Encrypt,"BOBISSOMESORTOFJUNIORCOMPLEXXENOPHONEONEZEROTHING", "FHIQXLTLKLTLSUFNPQPKETFENIOLVSWLTFIAFTLAKOWATEQOKPPA"));
-}
-
-
-TEST_CASE("Vigenere Cipher encryption", "[vigenere]") {
-  VigenereCipher vc{"key"};
-  REQUIRE( testCipher( vc, CipherMode::Encrypt, "HELLOWORLD",  "RIJVSUYVJN"));
-}
-
-
-TEST_CASE("Caesar Cipher decryption", "[caesar]") {
-  CaesarCipher cc{10};
-  REQUIRE( testCipher( cc, CipherMode::Decrypt, "ROVVYGYBVN", "HELLOWORLD"));
-}
-
-
-TEST_CASE("Playfair Cipher decryption", "[playfair]") {
-  PlayfairCipher cc{"hello"};
-  REQUIRE( testCipher( cc, CipherMode::Decrypt, "FHIQXLTLKLTLSUFNPQPKETFENIOLVSWLTFIAFTLAKOWATEQOKPPA","BOBISXSOMESORTOFIUNIORCOMPLEXQXENOPHONEONEZEROTHINGZ"));
-}
-
-
-TEST_CASE("Vigenere Cipher decryption", "[vigenere]") {
-  VigenereCipher vc{"key"};
-  REQUIRE( testCipher( vc, CipherMode::Decrypt, "RIJVSUYVJN" ,"HELLOWORLD"));
+  for ( size_t i{0}; i < ciphers.size(); ++i ) {
+    REQUIRE( ciphers[i] );
+    REQUIRE( testCipher( *ciphers[i], CipherMode::Encrypt, plainText[i], cipherText[i]) );
+    REQUIRE( testCipher( *ciphers[i], CipherMode::Decrypt, cipherText[i], plainText[i]) );
+  }
 }
 
 

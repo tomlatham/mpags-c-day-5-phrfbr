@@ -1,6 +1,5 @@
 
 // Standard library includes
-#include <iostream>
 #include <string>
 #include <algorithm>
 #include <map>
@@ -11,12 +10,13 @@
 
 VigenereCipher::VigenereCipher ( const std::string& key )
 {
-// Set the given key
-setKey(key);
+  // Set the given key
+  setKey(key);
 }
 
 
-void VigenereCipher::setKey(const std::string& key ){
+void VigenereCipher::setKey(const std::string& key )
+{
 
 	// Store the key
 
@@ -41,7 +41,7 @@ void VigenereCipher::setKey(const std::string& key ){
 
 		// Find the letter position in the alphabet
 
-		unsigned int index = Alphabet::alphabet.find(keyChar);
+		Alphabet::AlphabetSize index = Alphabet::alphabet.find(keyChar);
 
 		// Create a CaesarCipher using this position as a key
 
@@ -53,16 +53,16 @@ void VigenereCipher::setKey(const std::string& key ){
 
 	}
 
-	std::cout << "Congrats you're not an idiot" << std::endl;
-	}
+}
 
 
 
-	std::string VigenereCipher::applyCipher( const std::string& inputText, const CipherMode cipherMode ) const{
+std::string VigenereCipher::applyCipher( const std::string& inputText, const CipherMode cipherMode ) const
+{
 
 	// For each letter in input:
 
-std::string outputText{""};
+	std::string outputText{""};
 
 	const int inputSize = inputText.length();
 
@@ -71,7 +71,7 @@ std::string outputText{""};
 		// Find the corresponding letter in the key, 		
 		// repeating/truncating as required
 
-		char keyLetter = { key_[i % key_.length()] };
+		char keyLetter { key_[i % key_.length()] };
 
 		// Find the Caesar cipher from the lookup
 
@@ -90,6 +90,6 @@ std::string outputText{""};
 
 	}
 
-return outputText;
+	return outputText;
 
 }

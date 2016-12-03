@@ -9,9 +9,6 @@
 #include "CipherType.hpp"
 #include "TransformChar.hpp"
 #include "ProcessCommandLine.hpp"
-#include "CaesarCipher.hpp"
-#include "PlayfairCipher.hpp"
-#include "VigenereCipher.hpp"
 #include "CipherFactory.hpp"
   
 // Main function of the mpags-cipher program
@@ -51,7 +48,7 @@ int main(int argc, char* argv[])
       << "                      Stdout will be used if not supplied\n\n"
       << "  -c|--cipher CIPHER\n"
       << "                      Specify the cipher to be used to perform the encryption/decryption\n"
-      << "                      CIPHER can either be caesar or playfair - caesar is the default\n\n"
+      << "                      CIPHER can be caesar, playfair or vigenere - caesar is the default\n\n"
       << "  -k|--key KEY\n"
       << "                      Specify the cipher KEY\n"
       << "                      A null key, i.e. no encryption, is used if not supplied\n\n"
@@ -66,7 +63,7 @@ int main(int argc, char* argv[])
 
   // Handle version, if requested
   if (settings.versionRequested) {
-    std::cout << "0.2.0" << std::endl;
+    std::cout << "0.5.0" << std::endl;
     // Like help, requires no further action, so return from main,
     // with 0 used to indicate success
     return 0;
@@ -102,15 +99,17 @@ int main(int argc, char* argv[])
     }
   }
 
-  std::string outputText {""};
-
+  // Request construction of the appropriate cipher
   auto cipher = cipherFactory( settings.cipherType , settings.cipherKey);
 
+  // Check that the cipher was constructed successfully
   if (! cipher ) {
-  return 1;
+    std::cerr << "[error] problem constructing requested cipher" << std::endl;
+    return 1;
   }
 
-  outputText = cipher -> applyCipher( inputText, settings.cipherMode);
+  // Run the cipher on the input text, specifying whether to encrypt/decrypt
+  std::string outputText { cipher->applyCipher(inputText, settings.cipherMode) };
 
   // Output the transliterated text
   if (!settings.outputFile.empty()) {

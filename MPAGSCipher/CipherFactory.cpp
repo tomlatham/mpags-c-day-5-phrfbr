@@ -12,9 +12,13 @@ std::unique_ptr<Cipher> cipherFactory( const CipherType type, const std::string&
 
 		case CipherType::Caesar :
 		{
+			// We have the key as a string, but the Caesar cipher needs an unsigned long, so we first need to convert it
+			// We default to having a key of 0, i.e. no encryption, if no key was provided on the command line
 	        	size_t caesarKey {0};
 			if ( ! key.empty() ) {
 
+				// Before doing the conversion we should check that the string contains a valid positive integer.
+				// Here we do that by looping through each character and checking that it is a digit.
 	 			 for ( const auto& elem : key ) {
 	    				if ( ! std::isdigit(elem) ) {
 	      					std::cerr << "[error] cipher key must be an unsigned long integer for Caesar cipher,\n"
@@ -38,6 +42,6 @@ std::unique_ptr<Cipher> cipherFactory( const CipherType type, const std::string&
 		}
 	}
 
-return 0;
+	return std::unique_ptr<Cipher>();
 
 }			

@@ -3,30 +3,41 @@
 
 #include "CipherMode.hpp"
 
+/**
+ * \file Cipher.hpp
+ * \brief Contains the declaration of the purely abstract Cipher base class
+ */
+
+/**
+ * \class Cipher
+ *
+ * \brief Defines the interface for a cipher
+ *
+ * A purely abstract base class that defines the interface for a cipher
+ *
+ * It can be used as follows:
+ * \code{.cpp}
+ * class MyCipher : public Cipher {...};
+ * \endcode
+ */
 class Cipher {
 	
 	public:
-
-/**
-* \class Cipher.hpp 
-*
-*
-* \brief Definitions needed when defining a virtual destructor 
-
-**/
-
-
-		Cipher() = default;  
+		Cipher() = default;  ///< Default constructor
 		Cipher(const Cipher& rhs) = default;   ///< Copy constructor
 		Cipher(Cipher&& rhs) = default;   ///< Move constructor
 		Cipher& operator=(const Cipher& rhs) = default;   ///< Copy assignment operator
 		Cipher& operator=(Cipher&& rhs) = default;   ///< Move assignment operator 
 		virtual ~Cipher() = default; ///< Virtual destructor needed
 
-/// Define one pure vitual member functions
-
-		virtual std::string applyCipher( const std::string& input, const CipherMode cipherMode ) const=0;
-
+		/**
+		 * \brief Apply the cipher to the provided text
+		 *
+		 * \param inputText the text to encrypt or decrypt
+		 * \param cipherMode whether to encrypt or decrypt the input text
+		 * \return the result of applying the cipher to the input text
+		 */
+		virtual std::string applyCipher( const std::string& inputText, const CipherMode cipherMode ) const=0;
 };
 
 #endif // MPAGSCIPHER_CIPHER_HPP
